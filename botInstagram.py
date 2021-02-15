@@ -101,5 +101,5 @@ class InstagramBot:
                 print('DEU ERRO AQUI!!! - ' + e + '.   /');
         #FECHA curtirFotos
 
-igorBot = InstagramBot('SEU_LOGIN','SUA_SENHA');
-igorBot.login();
+logBot = InstagramBot('SEU_LOGIN','SUA_SENHA');
+logBot.login();
