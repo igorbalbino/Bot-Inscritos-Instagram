@@ -1,0 +1,20 @@
+/*
+Titulo: Criar BOT Inscritos Instagram
+Autor: Igor do Espírito Santo
+Linguagem: Python
+*/
+
+/*
+Tutorial: https://www.youtube.com/watch?v=0PdIP2Q2X4U&t=225s
+
+Links mencionados no vídeo:
+
+1. Instalar python para sua plataforma (windows/linux/mac) 
+ www.python.org/downloads/ e marque a opção "adicionar ao PATH"
+
+2. Instale o selenium ( explicar para o que serve)
+ cmd como admin e rode `pip install selenium`
+
+3. Faça o download do geckodriver
+ instalação depende do seu OS, link para a documentação na descrição (selenium-python.readthedocs.io/installation.html)
+*/
