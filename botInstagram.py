@@ -8,14 +8,16 @@ Linguagem: Python
 from selenium import webdriver;
 from selenium.webdriver.common.keys import Keys;
 import time;
+import PySimpleGUI as sg;
 
 #CRIA CLASSE QUE CONTEM A LOGICA DO SISTEMA.
 class InstagramBot:
     #CRIA FUNCAO CONSTRUTOR
-    def __init__(self, username, password):
+    def __init__(self, username, password, hashtag):
         #DECLARA DADOS NECESSARIOS EM VARIAVEIS
         self.username = username;
         self.password = password;
+        self.hashtag = hashtag;
 
         #REFERENCIA O EDGE COMO NAVEGADOR E EXECUTA O DRIVER NELE
         #COM O EDGE ESTÁ DANDO PROBLEMA. POR ISSO USEI O FIREFOX
@@ -64,27 +66,27 @@ class InstagramBot:
         #SIMULA CLICK DO BOTÃO ENTER DO TECLADO
         pass_element.send_keys(Keys.RETURN);
         time.sleep(5);
-        self.curtirFotos("memesbr");
+        self.curtirFotos();
         #FECHA login
 
     #CRIA FUNCAO curtirFotos
-    def curtirFotos(self, hashtag):
+    def curtirFotos(self):
         driver = self.driver;
         #CONCATENA VARIAVEIS E TEXTO
-        driver.get('https://www.instagram.com/explore/tags/' + hashtag + '/');
+        driver.get('https://www.instagram.com/explore/tags/' + self.hashtag + '/');
         time.sleep(5);
 
         #COMANDO PARA DESCER A PAGINA
-        for i in range(1,3):
+        for i in range(1, 3):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);");
             time.sleep(5);
         #COMANDO PARA PEGAR ALGO PELA TAG_NAME
         hrefs = driver.find_element_by_tag_name('a');
         #EXTRAI APENAS A URL QUE QUEREMOS PARA CURTIR A FOTO
         picHrefs = [elem.get_attribute('href') for elem in hrefs]
-        [href for href in picHrefs if hashtag in href]
+        [href for href in picHrefs if self.hashtag in href]
         #PRINTA VALOR NO CONSOLE
-        print('hashtag: ' + hashtag + ' fotos: ' + str(len(picHrefs)));
+        print('Hashtag: ' + self.hashtag + ' / Fotos: ' + str(len(picHrefs)));
 
         for picHref in picHrefs:
             driver.get(picHref);
@@ -101,5 +103,57 @@ class InstagramBot:
                 print('DEU ERRO AQUI!!! - ' + e + '.   /');
         #FECHA curtirFotos
 
-logBot = InstagramBot('SEU_LOGIN','SUA_SENHA');
-logBot.login();
+#logBot = InstagramBot('SEU_LOGIN','SUA_SENHA');
+#logBot.login();
+
+####################################################################
+####################################################################
+####################################################################
+
+class TelaPython:
+    #CRIA FUNCAO CONSTRUTOR
+    def __init__(self):
+        #LAYOUT
+        layout = [
+            #CRIA ELEMENTO NA TELA COM UM INPUT PARA RECEBER DADOS
+            [sg.Text('Usuário', size=(10, 0)), sg.Input(size=(30, 0), key='username')],
+            [sg.Text('Senha', size=(10, 0)), sg.Input(size=(30, 0), key='password')],
+            [sg.Text('Hashtag', size=(10, 0)), sg.Input(size=(40, 0), key='hashtag')],
+            [sg.Button('Enviar Dados',size=(30, 0))],
+            #CRIA TELA DE OUTPUT PARA MOSTRAR OS DADOS NO LAYOUT
+            [sg.Output(size=(50, 10))]
+        ];
+        #JANELA
+        #CRIA A TELA E COLOCA OS ELEMENTOS DE LAYOUT NELA
+        self.janela = sg.Window('Dados do Usuário').layout(layout);
+        #EXTRAIR DADOS DA TELA
+        #PEGA OS DADOS DOS INPUTS E USA O METODO READ() NA JANELA PARA GRAVAR OS DADOS
+        #self.button, self.values = self.janela.Read();
+        #^ ISSO FOI PASSADO PARA DENTRO DE UM "while" NA FUNCAO "Iniciar"
+
+    #FECHA __init__
+
+    def Iniciar(self):
+        while True:
+            # EXTRAIR DADOS DA TELA
+            self.button, self.values = self.janela.Read();
+            #IMPRIMI INFORMAÇÕES EXTRAIDAS DA TELA
+            #print(self.values);
+            username = self.values['username'];
+            password = self.values['password'];
+            hashtag = self.values['hashtag'];
+
+            print(f'Usuário: {username}');
+            print(f'Senha: {password}');
+            print(f'Hashtag: {hashtag}');
+
+            logBot = InstagramBot(username, password, hashtag);
+            logBot.login();
+        #FECHA while
+    # FECHA Iniciar
+
+
+
+#INSTANCIA CLASSE TelaPython EM tela
+tela = TelaPython();
+tela.Iniciar();
