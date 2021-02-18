@@ -7,6 +7,7 @@ Linguagem: Python
 #IMPORTA DEPENDENCIAS NECESSARIAS
 from selenium import webdriver;
 from selenium.webdriver.common.keys import Keys;
+from selenium.webdriver import FirefoxOptions
 import time;
 import PySimpleGUI as sg;
 
@@ -19,11 +20,15 @@ class InstagramBot:
         self.password = password;
         self.hashtag = hashtag;
 
+        opts = FirefoxOptions()
+        opts.add_argument("--headless")
+
         #REFERENCIA O EDGE COMO NAVEGADOR E EXECUTA O DRIVER NELE
         #COM O EDGE ESTÁ DANDO PROBLEMA. POR ISSO USEI O FIREFOX
         #DEPENDENCIA DO EDGE FOI BAIXADA DO SITE https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
-        #self.driver = webdriver.Edge(executable_path=r'C:\Users\igorb\Documents\GitHub\Bot-Inscritos-Instagram\geckodriver\geckodriver.exe');
-        self.driver = webdriver.Firefox(executable_path=r'C:\Users\igorb\Documents\GitHub\Bot-Inscritos-Instagram\geckodriver\geckodriver.exe');
+        #self.driver = webdriver.Edge(executable_path=r'geckodriver\geckodriver.exe');
+        self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe');
+        #self.driver = webdriver.Chrome(executable_path=r'geckodriver\geckodriver.exe');
     #FECHA __init__
 
     '''
@@ -81,14 +86,17 @@ class InstagramBot:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);");
             time.sleep(5);
         #COMANDO PARA PEGAR ALGO PELA TAG_NAME
+        hrefsList = [];
         hrefs = driver.find_element_by_tag_name('a');
+        print(type(hrefs))
         #EXTRAI APENAS A URL QUE QUEREMOS PARA CURTIR A FOTO
-        picHrefs = [elem.get_attribute('href') for elem in hrefs]
+        picHrefs = [elem.get_attribute('outerHTML') for elem in hrefs]
         [href for href in picHrefs if self.hashtag in href]
-        #PRINTA VALOR NO CONSOLE
-        print('Hashtag: ' + self.hashtag + ' / Fotos: ' + str(len(picHrefs)));
+        print('PicHrefs: -> '+picHrefs);
+        hrefsList.append(picHrefs.text);
+        print('hrefsList: -> '+hrefsList)
 
-        for picHref in picHrefs:
+        for picHref in hrefsList:
             driver.get(picHref);
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);");
             time.sleep(5);
@@ -119,9 +127,9 @@ class TelaPython:
             [sg.Text('Usuário', size=(10, 0)), sg.Input(size=(30, 0), key='username')],
             [sg.Text('Senha', size=(10, 0)), sg.Input(size=(30, 0), key='password')],
             [sg.Text('Hashtag', size=(10, 0)), sg.Input(size=(40, 0), key='hashtag')],
-            [sg.Button('Enviar Dados',size=(30, 0))],
+            [sg.Button('Enviar Dados',size=(30, 0))]
             #CRIA TELA DE OUTPUT PARA MOSTRAR OS DADOS NO LAYOUT
-            [sg.Output(size=(50, 10))]
+            #[sg.Output(size=(50, 10))]
         ];
         #JANELA
         #CRIA A TELA E COLOCA OS ELEMENTOS DE LAYOUT NELA
@@ -139,9 +147,12 @@ class TelaPython:
             self.button, self.values = self.janela.Read();
             #IMPRIMI INFORMAÇÕES EXTRAIDAS DA TELA
             #print(self.values);
-            username = self.values['username'];
-            password = self.values['password'];
-            hashtag = self.values['hashtag'];
+            #username = self.values['username'];
+            #password = self.values['password'];
+            #hashtag = self.values['hashtag'];
+            username = 'igor927482';
+            password = '12131212aA@';
+            hashtag = 'memes';
 
             print(f'Usuário: {username}');
             print(f'Senha: {password}');
