@@ -8,8 +8,13 @@ Linguagem: Python
 from selenium import webdriver;
 from selenium.webdriver.common.keys import Keys;
 from selenium.webdriver import FirefoxOptions
+import os;
 import time;
+import random;
 import PySimpleGUI as sg;
+
+def delay():
+    time.sleep(random.randint(1, 10))
 
 #CRIA CLASSE QUE CONTEM A LOGICA DO SISTEMA.
 class InstagramBot:
@@ -20,26 +25,13 @@ class InstagramBot:
         self.password = password;
         self.hashtag = hashtag;
 
-        opts = FirefoxOptions()
-        opts.add_argument("--headless")
-
         #REFERENCIA O EDGE COMO NAVEGADOR E EXECUTA O DRIVER NELE
         #COM O EDGE ESTÁ DANDO PROBLEMA. POR ISSO USEI O FIREFOX
-        #DEPENDENCIA DO EDGE FOI BAIXADA DO SITE https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+        #COM O FIREFOX ESTÁ DANDO PROBLEMA. POR ISSO USEI O CHROME
         #self.driver = webdriver.Edge(executable_path=r'geckodriver\geckodriver.exe');
-        self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe');
-        #self.driver = webdriver.Chrome(executable_path=r'geckodriver\geckodriver.exe');
+        #self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe');
+        self.driver = webdriver.Chrome(executable_path=r'geckodriver\chromedriver.exe');
     #FECHA __init__
-
-    '''
-    # DADOS NECESSARIOS E PROPRIEDADE UNICA
-
-    # //div(@class='Igw0E IwRSH eGOV_ _4EzTm')
-
-    # //submit(@type='submit')
-    # //input(@name='username')
-    # //input(@name='password')
-    '''
 
     #CRIA METODO login
     def login(self):
@@ -47,13 +39,7 @@ class InstagramBot:
         driver = self.driver;
         #COMANDO QUE ABRE O SITE (PRECISA DO LINK)
         driver.get('https://www.instagram.com/');
-        #PARA O BOT POR 2 SEG
-        time.sleep(2);
-        '''
-        #REFERENCIA BOTAO SUBMIT DO LOGIN
-        login_button = driver.find_element_by_xpath("//submit(@type='submit')");
-        login_button.click();
-        '''
+        delay();
 
         #REFERENCIA ELEMENTO INPUT-USERNAME
         #LIMPA O CAMPO
@@ -70,7 +56,7 @@ class InstagramBot:
         pass_element.send_keys(self.password);
         #SIMULA CLICK DO BOTÃO ENTER DO TECLADO
         pass_element.send_keys(Keys.RETURN);
-        time.sleep(5);
+        delay();
         self.curtirFotos();
         #FECHA login
 
@@ -79,43 +65,36 @@ class InstagramBot:
         driver = self.driver;
         #CONCATENA VARIAVEIS E TEXTO
         driver.get('https://www.instagram.com/explore/tags/' + self.hashtag + '/');
-        time.sleep(5);
+        delay();
 
         #COMANDO PARA DESCER A PAGINA
-        for i in range(1, 3):
+        for i in range(1, random.randint(5, 19)):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);");
-            time.sleep(5);
+            delay();
+
         #COMANDO PARA PEGAR ALGO PELA TAG_NAME
-        hrefsList = [];
-        hrefs = driver.find_element_by_tag_name('a');
-        print(type(hrefs))
+        hrefs = driver.execute_script('var as = document.getElementsByTagName("a");'
+                                      'var arr = Array.prototype.slice.call(as);'
+                                      'console.log(arr);'
+                                      'return arr;');
+
         #EXTRAI APENAS A URL QUE QUEREMOS PARA CURTIR A FOTO
-        picHrefs = [elem.get_attribute('outerHTML') for elem in hrefs]
+        picHrefs = [elem.get_attribute('href') for elem in hrefs]
         [href for href in picHrefs if self.hashtag in href]
-        print('PicHrefs: -> '+picHrefs);
-        hrefsList.append(picHrefs.text);
-        print('hrefsList: -> '+hrefsList)
 
-        for picHref in hrefsList:
+        for picHref in picHrefs:
             driver.get(picHref);
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);");
-            time.sleep(5);
-            #ALTERNATIVO
-            # driver.find_element_by_class_name('//svg[@class="_8-yf5 "]').click();
+            delay();
             try:
-                time.sleep(3);
-                driver.find_element_by_class_name('//button[@class="wpO6b "]').click();
-                time.sleep(10);
+                driver.find_element_by_xpath('//div/section/span/button[@class="wpO6b "]').click();
+                delay();
             except Exception as e:
-                time.sleep(5);
-                print('DEU ERRO AQUI!!! - ' + e + '.   /');
-        #FECHA curtirFotos
+                delay();
+                print(f'DEU ERRO AQUI!!! -> {e}.   /');
+            #FECHA try/except
+        #FECHA for
+    #FECHA curtirFotos
 
-#logBot = InstagramBot('SEU_LOGIN','SUA_SENHA');
-#logBot.login();
-
-####################################################################
-####################################################################
 ####################################################################
 
 class TelaPython:
@@ -124,9 +103,16 @@ class TelaPython:
         #LAYOUT
         layout = [
             #CRIA ELEMENTO NA TELA COM UM INPUT PARA RECEBER DADOS
+            [sg.Text(f'Olá! Seja bem vindo ao InstaBot.{os.linesep}'
+                     f'Como funciona?{os.linesep}'
+                     f'Digite o nome de usuário e senha nos respectivos campos.{os.linesep}'
+                     f'O campo de hashtag, refere-se à hashtag que o robô irá pesquisar.'
+                     f'Após essa pesquisa, o robô irá curtir um número aleatório de postagens relacionadas a essa hashtag.'
+                     f'{os.linesep}Assim, algumas páginas responsáveis por postar o que foi curtido, começarão a te seguir.'
+                     f'{os.linesep}Clique em "Enviar Dados" e aguarde. O robô irá iniciar.', size=(60, 15))],
             [sg.Text('Usuário', size=(10, 0)), sg.Input(size=(30, 0), key='username')],
             [sg.Text('Senha', size=(10, 0)), sg.Input(size=(30, 0), key='password')],
-            [sg.Text('Hashtag', size=(10, 0)), sg.Input(size=(40, 0), key='hashtag')],
+            [sg.Text('Hashtag (sem o #, apenas letras)', size=(25, 0)), sg.Input(size=(30, 0), key='hashtag')],
             [sg.Button('Enviar Dados',size=(30, 0))]
             #CRIA TELA DE OUTPUT PARA MOSTRAR OS DADOS NO LAYOUT
             #[sg.Output(size=(50, 10))]
@@ -145,14 +131,9 @@ class TelaPython:
         while True:
             # EXTRAIR DADOS DA TELA
             self.button, self.values = self.janela.Read();
-            #IMPRIMI INFORMAÇÕES EXTRAIDAS DA TELA
-            #print(self.values);
-            #username = self.values['username'];
-            #password = self.values['password'];
-            #hashtag = self.values['hashtag'];
-            username = 'igor927482';
-            password = '12131212aA@';
-            hashtag = 'memes';
+            username = self.values['username'];
+            password = self.values['password'];
+            hashtag = self.values['hashtag'];
 
             print(f'Usuário: {username}');
             print(f'Senha: {password}');
@@ -162,8 +143,6 @@ class TelaPython:
             logBot.login();
         #FECHA while
     # FECHA Iniciar
-
-
 
 #INSTANCIA CLASSE TelaPython EM tela
 tela = TelaPython();
