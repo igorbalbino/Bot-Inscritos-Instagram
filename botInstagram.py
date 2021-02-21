@@ -14,7 +14,7 @@ import random;
 import PySimpleGUI as sg;
 
 def delay():
-    time.sleep(random.randint(1, 10))
+    time.sleep(random.randint(2, 15))
 
 #CRIA CLASSE QUE CONTEM A LOGICA DO SISTEMA.
 class InstagramBot:
@@ -68,7 +68,7 @@ class InstagramBot:
         delay();
 
         #COMANDO PARA DESCER A PAGINA
-        for i in range(1, random.randint(5, 19)):
+        for i in range(1, random.randint(5, 28)):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);");
             delay();
 
@@ -134,10 +134,6 @@ class TelaPython:
             username = self.values['username'];
             password = self.values['password'];
             hashtag = self.values['hashtag'];
-
-            print(f'Usuário: {username}');
-            print(f'Senha: {password}');
-            print(f'Hashtag: {hashtag}');
 
             logBot = InstagramBot(username, password, hashtag);
             logBot.login();
