@@ -14,7 +14,7 @@ import random;
 import PySimpleGUI as sg;
 
 def delay():
-    time.sleep(random.randint(2, 15))
+    time.sleep(random.randint(2, 9))
 
 #CRIA CLASSE QUE CONTEM A LOGICA DO SISTEMA.
 class InstagramBot:
