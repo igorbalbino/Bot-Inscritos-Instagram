@@ -16,6 +16,9 @@ import PySimpleGUI as sg;
 def delay():
     time.sleep(random.randint(2, 9))
 
+def delay2():
+    time.sleep(random.randint(2, 3))
+
 #CRIA CLASSE QUE CONTEM A LOGICA DO SISTEMA.
 class InstagramBot:
     #CRIA FUNCAO CONSTRUTOR
@@ -68,9 +71,9 @@ class InstagramBot:
         delay();
 
         #COMANDO PARA DESCER A PAGINA
-        for i in range(1, random.randint(5, 28)):
+        for i in range(1, random.randint(25, 48)):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);");
-            delay();
+            delay2();
 
         #COMANDO PARA PEGAR ALGO PELA TAG_NAME
         hrefs = driver.execute_script('var as = document.getElementsByTagName("a");'
@@ -86,7 +89,7 @@ class InstagramBot:
             driver.get(picHref);
             delay();
             try:
-                driver.find_element_by_xpath('//div/section/span/button[@class="wpO6b "]').click();
+                driver.find_element_by_xpath('//section/span/button[@class="wpO6b "]').click();
                 delay();
             except Exception as e:
                 delay();
