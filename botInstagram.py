@@ -5,13 +5,13 @@ Linguagem: Python
 '''
 
 #IMPORTA DEPENDENCIAS NECESSARIAS
-from selenium import webdriver;
-from selenium.webdriver.common.keys import Keys;
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import FirefoxOptions
-import os;
-import time;
-import random;
-import PySimpleGUI as sg;
+import os
+import time
+import random
+import PySimpleGUI as sg
 
 def delay():
     time.sleep(random.randint(2, 9))
@@ -24,76 +24,76 @@ class InstagramBot:
     #CRIA FUNCAO CONSTRUTOR
     def __init__(self, username, password, hashtag):
         #DECLARA DADOS NECESSARIOS EM VARIAVEIS
-        self.username = username;
-        self.password = password;
-        self.hashtag = hashtag;
+        self.username = username
+        self.password = password
+        self.hashtag = hashtag
 
         #REFERENCIA O EDGE COMO NAVEGADOR E EXECUTA O DRIVER NELE
         #COM O EDGE ESTÁ DANDO PROBLEMA. POR ISSO USEI O FIREFOX
         #COM O FIREFOX ESTÁ DANDO PROBLEMA. POR ISSO USEI O CHROME
-        #self.driver = webdriver.Edge(executable_path=r'geckodriver\geckodriver.exe');
-        #self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe');
-        self.driver = webdriver.Chrome(executable_path=r'geckodriver\chromedriver.exe');
+        #self.driver = webdriver.Edge(executable_path=r'geckodriver\geckodriver.exe')
+        #self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe')
+        self.driver = webdriver.Chrome(executable_path=r'geckodriver\chromedriver.exe')
     #FECHA __init__
 
     #CRIA METODO login
     def login(self):
         #PASSA A REFERENCIA DO EDGE COM SELENIUM
-        driver = self.driver;
+        driver = self.driver
         #COMANDO QUE ABRE O SITE (PRECISA DO LINK)
-        driver.get('https://www.instagram.com/');
-        delay();
+        driver.get('https://www.instagram.com/')
+        delay()
 
         #REFERENCIA ELEMENTO INPUT-USERNAME
         #LIMPA O CAMPO
         #ENVIA O VALOR PARA O CAMPO
-        user_element = driver.find_element_by_xpath("//input[@name='username']");
-        user_element.clear();
-        user_element.send_keys(self.username);
+        user_element = driver.find_element_by_xpath("//input[@name='username']")
+        user_element.clear()
+        user_element.send_keys(self.username)
 
         # REFERENCIA ELEMENTO INPUT-PASSWORD
         # LIMPA O CAMPO
         # ENVIA O VALOR PARA O CAMPO
-        pass_element = driver.find_element_by_xpath("//input[@name='password']");
-        pass_element.clear();
-        pass_element.send_keys(self.password);
+        pass_element = driver.find_element_by_xpath("//input[@name='password']")
+        pass_element.clear()
+        pass_element.send_keys(self.password)
         #SIMULA CLICK DO BOTÃO ENTER DO TECLADO
-        pass_element.send_keys(Keys.RETURN);
-        delay();
-        self.curtirFotos();
+        pass_element.send_keys(Keys.RETURN)
+        delay()
+        self.curtirFotos()
         #FECHA login
 
     #CRIA FUNCAO curtirFotos
     def curtirFotos(self):
-        driver = self.driver;
+        driver = self.driver
         #CONCATENA VARIAVEIS E TEXTO
-        driver.get('https://www.instagram.com/explore/tags/' + self.hashtag + '/');
-        delay();
+        driver.get('https://www.instagram.com/explore/tags/' + self.hashtag + '/')
+        delay()
 
         #COMANDO PARA DESCER A PAGINA
         for i in range(1, random.randint(25, 48)):
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);");
-            delay2();
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
+            delay2()
 
         #COMANDO PARA PEGAR ALGO PELA TAG_NAME
-        hrefs = driver.execute_script('var as = document.getElementsByTagName("a");'
-                                      'var arr = Array.prototype.slice.call(as);'
-                                      'console.log(arr);'
-                                      'return arr;');
+        hrefs = driver.execute_script('var as = document.getElementsByTagName("a")'
+                                      'var arr = Array.prototype.slice.call(as)'
+                                      'console.log(arr)'
+                                      'return arr')
 
         #EXTRAI APENAS A URL QUE QUEREMOS PARA CURTIR A FOTO
         picHrefs = [elem.get_attribute('href') for elem in hrefs]
         [href for href in picHrefs if self.hashtag in href]
 
         for picHref in picHrefs:
-            driver.get(picHref);
-            delay();
+            driver.get(picHref)
+            delay()
             try:
-                driver.find_element_by_xpath('//section/span/button[@class="wpO6b "]').click();
-                delay();
+                driver.find_element_by_xpath('//section/span/button[@class="wpO6b "]').click()
+                delay()
             except Exception as e:
-                delay();
-                print(f'DEU ERRO AQUI!!! -> {e}.   /');
+                delay()
+                print(f'DEU ERRO AQUI!!! -> {e}.   /')
             #FECHA try/except
         #FECHA for
     #FECHA curtirFotos
@@ -119,13 +119,13 @@ class TelaPython:
             [sg.Button('Enviar Dados',size=(30, 0))]
             #CRIA TELA DE OUTPUT PARA MOSTRAR OS DADOS NO LAYOUT
             #[sg.Output(size=(50, 10))]
-        ];
+        ]
         #JANELA
         #CRIA A TELA E COLOCA OS ELEMENTOS DE LAYOUT NELA
-        self.janela = sg.Window('Dados do Usuário').layout(layout);
+        self.janela = sg.Window('Dados do Usuário').layout(layout)
         #EXTRAIR DADOS DA TELA
         #PEGA OS DADOS DOS INPUTS E USA O METODO READ() NA JANELA PARA GRAVAR OS DADOS
-        #self.button, self.values = self.janela.Read();
+        #self.button, self.values = self.janela.Read()
         #^ ISSO FOI PASSADO PARA DENTRO DE UM "while" NA FUNCAO "Iniciar"
 
     #FECHA __init__
@@ -133,16 +133,16 @@ class TelaPython:
     def Iniciar(self):
         while True:
             # EXTRAIR DADOS DA TELA
-            self.button, self.values = self.janela.Read();
-            username = self.values['username'];
-            password = self.values['password'];
-            hashtag = self.values['hashtag'];
+            self.button, self.values = self.janela.Read()
+            username = self.values['username']
+            password = self.values['password']
+            hashtag = self.values['hashtag']
 
-            logBot = InstagramBot(username, password, hashtag);
-            logBot.login();
+            logBot = InstagramBot(username, password, hashtag)
+            logBot.login()
         #FECHA while
     # FECHA Iniciar
 
 #INSTANCIA CLASSE TelaPython EM tela
-tela = TelaPython();
-tela.Iniciar();
+tela = TelaPython()
+tela.Iniciar()
