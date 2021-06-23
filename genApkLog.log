@@ -1,0 +1,60 @@
+2021-06-22 15:21:26,290 - mylogger - INFO - Message: Element <path> could not be scrolled into view
+
+2021-06-22 15:21:36,384 - mylogger - INFO - Message: Failed to decode response from marionette
+
+2021-06-22 15:21:36,384 - mylogger - INFO - Message: Failed to decode response from marionette
+
+2021-06-22 15:24:29,976 - mylogger - INFO - Message: Element <path> could not be scrolled into view
+
+2021-06-22 15:24:40,074 - mylogger - INFO - Message: Failed to decode response from marionette
+
+2021-06-22 15:24:40,074 - mylogger - INFO - Message: Failed to decode response from marionette
+
+2021-06-22 15:26:46,831 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:26:56,680 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:26:56,680 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:27:05,495 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:27:05,495 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:27:05,495 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:27:13,177 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:27:13,177 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:27:13,177 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:27:13,177 - mylogger - INFO - Message: Unable to locate element: //button[@class='.wpO6b path']
+
+2021-06-22 15:28:17,725 - mylogger - INFO - Message: Element <path> could not be scrolled into view
+
+2021-06-22 15:29:06,641 - mylogger - INFO - Message: Element <path> could not be scrolled into view
+
+2021-06-22 15:30:13,833 - mylogger - INFO - Message: Element <path> could not be scrolled into view
+
+2021-06-22 15:30:25,912 - mylogger - INFO - Message: Failed to decode response from marionette
+
+2021-06-22 15:30:25,912 - mylogger - INFO - Message: Failed to decode response from marionette
+
+2021-06-22 15:37:31,438 - mylogger - INFO - 'NoneType' object has no attribute 'click'
+2021-06-22 15:39:07,967 - mylogger - INFO - 'NoneType' object has no attribute 'driver'
+2021-06-22 15:39:19,871 - mylogger - INFO - 'NoneType' object has no attribute 'driver'
+2021-06-22 15:39:19,871 - mylogger - INFO - 'NoneType' object has no attribute 'driver'
+2021-06-22 15:45:56,419 - mylogger - INFO - Message: Failed to decode response from marionette
+
+2021-06-22 16:33:26,454 - mylogger - INFO - Message: TypeError: browsingContextFn().currentWindowGlobal is null
+
+2021-06-22 17:07:18,650 - mylogger - INFO - Message: Browsing context has been discarded
+
+2021-06-22 19:18:12,972 - mylogger - INFO - Message: Browsing context has been discarded
+
+2021-06-22 19:31:40,099 - mylogger - INFO - Message: Failed to decode response from marionette
+
+2021-06-22 21:00:21,138 - mylogger - INFO - Message: Browsing context has been discarded
+
+2021-06-23 13:51:04,648 - mylogger - INFO - Message: Failed to decode response from marionette
+

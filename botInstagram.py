@@ -12,9 +12,26 @@ import os
 import time
 import random
 import PySimpleGUI as sg
+import logging
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+
+#pega o log do argumento passado
+def getLog(e):
+    logger = logging.getLogger('mylogger')
+    logger.setLevel(logging.DEBUG)
+    #temos também:
+    #logging.INFO
+    handler = logging.FileHandler('genApkLog.log')
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.info(e)
+#getLog
 
 def delay():
-    time.sleep(random.randint(2, 9))
+    time.sleep(random.randint(3, 4))
 
 def delay2():
     time.sleep(random.randint(2, 3))
@@ -32,8 +49,8 @@ class InstagramBot:
         #COM O EDGE ESTÁ DANDO PROBLEMA. POR ISSO USEI O FIREFOX
         #COM O FIREFOX ESTÁ DANDO PROBLEMA. POR ISSO USEI O CHROME
         #self.driver = webdriver.Edge(executable_path=r'geckodriver\geckodriver.exe')
-        #self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe')
-        self.driver = webdriver.Chrome(executable_path=r'geckodriver\chromedriver.exe')
+        self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe')
+        #self.driver = webdriver.Chrome(executable_path=r'geckodriver\chromedriver.exe')
     #FECHA __init__
 
     #CRIA METODO login
@@ -71,15 +88,15 @@ class InstagramBot:
         delay()
 
         #COMANDO PARA DESCER A PAGINA
-        for i in range(1, random.randint(25, 48)):
+        for i in range(1, random.randint(50, 150)):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
             delay2()
 
         #COMANDO PARA PEGAR ALGO PELA TAG_NAME
-        hrefs = driver.execute_script('var as = document.getElementsByTagName("a")'
-                                      'var arr = Array.prototype.slice.call(as)'
-                                      'console.log(arr)'
-                                      'return arr')
+        hrefs = driver.execute_script('var as = document.getElementsByTagName("a");'
+                                      'var arr = Array.prototype.slice.call(as);'
+                                      'console.log(arr);'
+                                      'return arr;')
 
         #EXTRAI APENAS A URL QUE QUEREMOS PARA CURTIR A FOTO
         picHrefs = [elem.get_attribute('href') for elem in hrefs]
@@ -89,9 +106,10 @@ class InstagramBot:
             driver.get(picHref)
             delay()
             try:
-                driver.find_element_by_xpath('//section/span/button[@class="wpO6b "]').click()
+                WebDriverWait(driver, 1000000).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[1]/span[1]/button'))).click()
                 delay()
             except Exception as e:
+                getLog(e)
                 delay()
                 print(f'DEU ERRO AQUI!!! -> {e}.   /')
             #FECHA try/except
@@ -113,9 +131,9 @@ class TelaPython:
                      f'Após essa pesquisa, o robô irá curtir um número aleatório de postagens relacionadas a essa hashtag.'
                      f'{os.linesep}Assim, algumas páginas responsáveis por postar o que foi curtido, começarão a te seguir.'
                      f'{os.linesep}Clique em "Enviar Dados" e aguarde. O robô irá iniciar.', size=(60, 15))],
-            [sg.Text('Usuário', size=(10, 0)), sg.Input(size=(30, 0), key='username')],
-            [sg.Text('Senha', size=(10, 0)), sg.Input(size=(30, 0), key='password')],
-            [sg.Text('Hashtag (sem o #, apenas letras)', size=(25, 0)), sg.Input(size=(30, 0), key='hashtag')],
+            [sg.Text('Usuário', size=(10, 0)), sg.Input(size=(30, 0), key='username', default_text='oigordev')],
+            [sg.Text('Senha', size=(10, 0)), sg.Input(size=(30, 0), key='password', password_char='*')],
+            [sg.Text('Hashtag (sem o #, apenas letras)', size=(25, 0)), sg.Input(size=(30, 0), key='hashtag', default_text='')],
             [sg.Button('Enviar Dados',size=(30, 0))]
             #CRIA TELA DE OUTPUT PARA MOSTRAR OS DADOS NO LAYOUT
             #[sg.Output(size=(50, 10))]
