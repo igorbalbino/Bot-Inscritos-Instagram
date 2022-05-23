@@ -49,8 +49,8 @@ class InstagramBot:
         #COM O EDGE ESTÁ DANDO PROBLEMA. POR ISSO USEI O FIREFOX
         #COM O FIREFOX ESTÁ DANDO PROBLEMA. POR ISSO USEI O CHROME
         #self.driver = webdriver.Edge(executable_path=r'geckodriver\geckodriver.exe')
-        self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe')
-        #self.driver = webdriver.Chrome(executable_path=r'geckodriver\chromedriver.exe')
+        #self.driver = webdriver.Firefox(executable_path=r'geckodriver\geckodriver.exe')
+        self.driver = webdriver.Chrome(executable_path=r'geckodriver\chromedriver.exe')
     #FECHA __init__
 
     #CRIA METODO login
@@ -82,9 +82,19 @@ class InstagramBot:
 
     #CRIA FUNCAO curtirFotos
     def curtirFotos(self):
-        driver = self.driver
         #CONCATENA VARIAVEIS E TEXTO
-        driver.get('https://www.instagram.com/explore/tags/' + self.hashtag + '/')
+        if self.hashtag.find(',') > 0:
+            hashts = self.hashtag.split(',')
+            print(hashts)
+            for hasht in hashts:
+                self.doLike(hasht)
+        else:
+            self.doLike(self.hashtag)
+    #FECHA curtirFotos
+    
+    def doLike(self, hasht):
+        driver = self.driver
+        driver.get('https://www.instagram.com/explore/tags/' + hasht + '/')
         delay()
 
         #COMANDO PARA DESCER A PAGINA
@@ -100,21 +110,25 @@ class InstagramBot:
 
         #EXTRAI APENAS A URL QUE QUEREMOS PARA CURTIR A FOTO
         picHrefs = [elem.get_attribute('href') for elem in hrefs]
-        [href for href in picHrefs if self.hashtag in href]
+        [href for href in picHrefs if hasht in href]
 
         for picHref in picHrefs:
             driver.get(picHref)
             delay()
             try:
-                WebDriverWait(driver, 1000000).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[1]/span[1]/button'))).click()
+                WebDriverWait(driver, 1000000).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div/div[2]/div/div[2]/section[1]/span[1]/button'))).click()
                 delay()
+                jsScriptGet = 'var arr = document.getElementsByClassName("XQXOT    pXf-y ")[0].getElementsByClassName("wpO6b ZQScA ");' \
+                                'for(var i in arr){' \
+                                'arr[i].click();' \
+                                '}'
+                self.driver.execute_script(jsScriptGet)
             except Exception as e:
                 getLog(e)
-                delay()
                 print(f'DEU ERRO AQUI!!! -> {e}.   /')
             #FECHA try/except
         #FECHA for
-    #FECHA curtirFotos
+    #FECHA doLike
 
 ####################################################################
 
@@ -131,7 +145,7 @@ class TelaPython:
                      f'Após essa pesquisa, o robô irá curtir um número aleatório de postagens relacionadas a essa hashtag.'
                      f'{os.linesep}Assim, algumas páginas responsáveis por postar o que foi curtido, começarão a te seguir.'
                      f'{os.linesep}Clique em "Enviar Dados" e aguarde. O robô irá iniciar.', size=(60, 15))],
-            [sg.Text('Usuário', size=(10, 0)), sg.Input(size=(30, 0), key='username', default_text='oigordev')],
+            [sg.Text('Usuário', size=(10, 0)), sg.Input(size=(30, 0), key='username', default_text='oigor.dev')],
             [sg.Text('Senha', size=(10, 0)), sg.Input(size=(30, 0), key='password', password_char='*')],
             [sg.Text('Hashtag (sem o #, apenas letras)', size=(25, 0)), sg.Input(size=(30, 0), key='hashtag', default_text='')],
             [sg.Button('Enviar Dados',size=(30, 0))]
