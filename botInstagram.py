@@ -85,6 +85,7 @@ class InstagramBot:
         #CONCATENA VARIAVEIS E TEXTO
         if self.hashtag.find(',') > 0:
             hashts = self.hashtag.split(',')
+            print('####################### HASHTAAAAAAAAAAAAAAAAAAAAAAAAAAAGS #######################')
             print(hashts)
             for hasht in hashts:
                 self.doLike(hasht)
@@ -98,9 +99,9 @@ class InstagramBot:
         delay()
 
         #COMANDO PARA DESCER A PAGINA
-        for i in range(1, random.randint(50, 150)):
+        for i in range(50, random.randint(70, 90)):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-            delay2()
+            delay()
 
         #COMANDO PARA PEGAR ALGO PELA TAG_NAME
         hrefs = driver.execute_script('var as = document.getElementsByTagName("a");'
@@ -116,9 +117,14 @@ class InstagramBot:
             driver.get(picHref)
             delay()
             try:
-                WebDriverWait(driver, 1000000).until(EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/section/main/div/div[1]/article/div/div[2]/div/div[2]/section[1]/span[1]/button'))).click()
+                WebDriverWait(driver, 10000).until(EC.element_to_be_clickable((By.XPATH, '//*[@id="mount_0_0_AV"]/div/div[1]/div/div[1]/div/div/div/div[1]/div[1]/section/main/div[1]/div[1]/article/div/div[3]/div/div/section[1]/span[1]/button'))).click()
                 delay()
-                jsScriptGet = 'var arr = document.getElementsByClassName("XQXOT    pXf-y ")[0].getElementsByClassName("wpO6b ZQScA ");' \
+                '''jsScriptGet = 'var arr = document.getElementsByClassName("XQXOT    pXf-y ")[0].getElementsByClassName("wpO6b ZQScA ");' \
+                                'for(var i in arr){' \
+                                'arr[i].click();' \
+                                '}'
+                '''
+                jsScriptGet = 'var arr = document.getElementsByClassName("XQXOT    pXf-y ");' \
                                 'for(var i in arr){' \
                                 'arr[i].click();' \
                                 '}'
